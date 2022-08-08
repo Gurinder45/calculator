@@ -11,7 +11,9 @@ class Calculator {
     this.operation = undefined;
   }
 
-  back() {}
+  back() {
+    this.curInputScreen = this.curInputScreen.toString().slice(0, -1);
+  }
 
   addNumber(num) {
     if (num === "." && this.curInputScreen.includes(".")) {
@@ -32,7 +34,33 @@ class Calculator {
     this.curInputScreen = "";
   }
 
-  calculate() {}
+  calculate() {
+    let result;
+    const prev = parseFloat(this.prevInputScreen);
+    const cur = parseFloat(this.curInputScreen);
+    if (isNaN(prev || isNaN(cur))) {
+      return;
+    }
+    switch (this.operation) {
+      case "+":
+        result = prev + cur;
+        break;
+      case "x":
+        result = prev * cur;
+        break;
+      case "÷":
+        result = prev / cur;
+        break;
+      case "-":
+        result = prev - cur;
+        break;
+      default:
+        return;
+    }
+    this.curInputScreen = result;
+    this.operation = undefined;
+    this.prevInputScreen = "";
+  }
 
   updateScreen() {
     this.curInput.innerText = this.curInputScreen;
@@ -61,4 +89,19 @@ operationBtns.forEach(function (btn) {
     calculator.selectOperation(btn.innerText);
     calculator.updateScreen();
   });
+});
+
+acBtn.addEventListener("click", function () {
+  calculator.clear();
+  calculator.updateScreen();
+});
+
+equalBtn.addEventListener("click", function () {
+  calculator.calculate();
+  calculator.updateScreen();
+});
+
+backBtn.addEventListener("click", function () {
+  calculator.back();
+  calculator.updateScreen();
 });
